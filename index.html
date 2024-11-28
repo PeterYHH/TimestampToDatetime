@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamp Formatter</title>
+    <!-- 引入 Bootstrap 3 -->
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Timestamp 格式化工具</h1>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form>
+                    <div class="form-group">
+                        <label for="timestamp">輸入 Timestamp (13位數):</label>
+                        <input 
+                            type="number" 
+                            id="timestamp" 
+                            class="form-control" 
+                            placeholder="例如 1695849600000">
+                    </div>
+                </form>
+                <hr>
+                <div class="alert alert-info text-center" id="result">
+                    請輸入完整的時間戳
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 jQuery 和 Bootstrap 3 的 JavaScript -->
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        // 添加輸入框的事件監聽
+        document.getElementById('timestamp').addEventListener('input', formatTimestamp);
+
+        function formatTimestamp() {
+            const input = document.getElementById('timestamp').value;
+            const length = input.length;
+            const requiredLength = 13; // timestamp 的完整位數
+            const missingLength = requiredLength - length;
+
+            // 如果輸入長度不夠，顯示錯誤提示
+            if (length < requiredLength) {
+                document.getElementById('result').textContent = `格式不符，缺少 ${missingLength} 個字元`;
+                document.getElementById('result').className = 'alert alert-danger text-center';
+                return;
+            }
+
+            // 如果輸入過長，也顯示錯誤提示
+            if (length > requiredLength) {
+                document.getElementById('result').textContent = '格式不符，輸入過長，請檢查';
+                document.getElementById('result').className = 'alert alert-danger text-center';
+                return;
+            }
+
+            // 將完整的 timestamp 轉換成日期對象
+            const timestamp = parseInt(input, 10);
+
+            if (isNaN(timestamp)) {
+                document.getElementById('result').textContent = "請輸入有效的數字";
+                document.getElementById('result').className = 'alert alert-danger text-center';
+                return;
+            }
+
+            const date = new Date(timestamp);
+
+            // 格式化年月日時分秒
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            // 組合結果
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('result').textContent = formattedDate;
+            document.getElementById('result').className = 'alert alert-success text-center';
+        }
+    </script>
+</body>
+</html>
